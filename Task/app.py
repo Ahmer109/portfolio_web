@@ -67,61 +67,52 @@ with st.sidebar:
 # ---------------------------
 def home_page():
     with st.container():
-        st.markdown('<div class="main-container">', unsafe_allow_html=True)
-        
-        col1, col2 = st.columns([1, 2], gap="large")
-        
-        with col1:
-            try:
-                st.image(get_file_path("assets/profile_img_.jpg"), width=250)
-            except Exception as e:
-                st.error(f"Couldn't load profile image: {str(e)}")
             
-        with col2:
-            st.title("Hello, I'm Ahmer ALI 👋", anchor=False)
+        
+        st.title("Hello, I'm Ahmer ALI 👋", anchor=False)
+        st.markdown("""
+        <div class="intro-text">
+        I'm a passionate Python developer with expertise in building data-driven applications 
+        and creative solutions. I love turning ideas into functional, user-friendly applications.
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("---")
+        
+        with st.expander("📚 Education & Experience", expanded=True):
             st.markdown("""
-            <div class="intro-text">
-            I'm a passionate Python developer with expertise in building data-driven applications 
-            and creative solutions. I love turning ideas into functional, user-friendly applications.
+            <div class="experience-item">
+                <span class="exp-icon">🎓</span>
+                <div class="exp-content">
+                    <strong>BSc in Computer Science</strong>
+                </div>
+            </div>
+            <div class="experience-item">
+                <span class="exp-icon">💼</span>
+                <div class="exp-content">
+                    <strong>Python Developer Intern</strong> at Gexton Education
+                </div>
             </div>
             """, unsafe_allow_html=True)
-            
-            st.markdown("---")
-            
-            with st.expander("📚 Education & Experience", expanded=True):
-                st.markdown("""
-                <div class="experience-item">
-                    <span class="exp-icon">🎓</span>
-                    <div class="exp-content">
-                        <strong>BSc in Computer Science</strong>
-                    </div>
-                </div>
-                <div class="experience-item">
-                    <span class="exp-icon">💼</span>
-                    <div class="exp-content">
-                        <strong>Python Developer Intern</strong> at Gexton Education
-                    </div>
-                </div>
-                """, unsafe_allow_html=True)
-            
-            with st.expander("🛠️ Technical Skills", expanded=True):
-                cols = st.columns(3)
-                with cols[0]:
-                    st.markdown("**Programming**")
-                    st.markdown("- Python")
-                    st.markdown("- Dart")
-                    
-                with cols[1]:
-                    st.markdown("**Frameworks**")
-                    st.markdown("- Streamlit")
-                    st.markdown("- Flutter")
-                    st.markdown("- Pandas")
-                    
-                with cols[2]:
-                    st.markdown("**Tools**")
-                    st.markdown("- Firebase")
-                    st.markdown("- Git")
-                    st.markdown("- VS Code")
+        
+        with st.expander("🛠️ Technical Skills", expanded=True):
+            cols = st.columns(3)
+            with cols[0]:
+                st.markdown("**Programming**")
+                st.markdown("- Python")
+                st.markdown("- Dart")
+                
+            with cols[1]:
+                st.markdown("**Frameworks**")
+                st.markdown("- Streamlit")
+                st.markdown("- Flutter")
+                st.markdown("- Pandas")
+                
+            with cols[2]:
+                st.markdown("**Tools**")
+                st.markdown("- Firebase")
+                st.markdown("- Git")
+                st.markdown("- VS Code")
         
         st.markdown('</div>', unsafe_allow_html=True)
 
