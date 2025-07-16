@@ -39,7 +39,7 @@ with st.sidebar:
     
     # Navigation
     st.subheader("Navigation")
-    page = st.radio("", ["Home / About Me", "Projects", "Resume"], label_visibility="collapsed")
+    page = st.radio("", ["Home / About Me", "Projects"], label_visibility="collapsed")
     
     st.markdown("---")
     
