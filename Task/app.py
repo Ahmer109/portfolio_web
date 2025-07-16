@@ -29,12 +29,6 @@ def get_file_path(filename):
 # ---------------------------
 with st.sidebar:
     # Profile Image with error handling
-    try:
-        profile_img = get_file_path("assets/profile_img_.jpg")
-        st.image(profile_img, width=150, caption="Ahmer ALI")
-    except Exception as e:
-        st.error(f"Couldn't load profile image: {str(e)}")
-    
     st.title("Ahmer ALI")
     st.markdown("""
     **Python Developer | Data Enthusiast**  
