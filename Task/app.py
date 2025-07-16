@@ -4,6 +4,9 @@ import os
 import requests
 from io import BytesIO
 
+# ---------------------------
+# PAGE CONFIGURATION
+# ---------------------------
 st.set_page_config(
     page_title="Ahmer ALI | Portfolio",
     page_icon="🚀",
@@ -11,6 +14,9 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# ---------------------------
+# ASSET LOADING FUNCTIONS
+# ---------------------------
 def load_asset(asset_name, asset_type="image"):
     """Universal asset loader with multiple fallbacks"""
     # Local paths to try (relative to app directory)
@@ -20,16 +26,19 @@ def load_asset(asset_name, asset_type="image"):
         asset_name
     ]
     
+    # Try local files first
     for path in local_paths:
         if os.path.exists(path):
             return path
     
+    # GitHub raw content URL fallback
     github_url = f"https://raw.githubusercontent.com/Ahmer109/portfolio_web/main/assets/{asset_name}"
     
+    # Return based on asset type
     if asset_type == "image":
-        return github_url
+        return github_url  # Streamlit can display images directly from URL
     elif asset_type == "pdf":
-        return github_url
+        return github_url  # We'll handle PDFs differently
     
     return None
 
@@ -40,11 +49,29 @@ def load_pdf(asset_name):
     if local_path and os.path.exists(local_path):
         return local_path
     
+    # Try GitHub raw content
     github_url = f"https://raw.githubusercontent.com/Ahmer109/portfolio_web/main/assets/{asset_name}"
     
+    # Return GitHub URL as fallback
     return github_url
 
+# ---------------------------
+# SIDEBAR
+# ---------------------------
 with st.sidebar:
+    # Show debug info toggle
+    # if st.checkbox("Show Debug Info"):
+    #     debug_info()
+    
+    # Profile Image with multiple fallbacks
+    try:
+        img_path = load_asset("profile_img_.jpg")
+        st.image(img_path, width=150, caption="Ahmer ALI")
+    except Exception as e:
+        st.error(f"Couldn't load profile image: {str(e)}")
+        # Fallback to placeholder
+        st.image("https://via.placeholder.com/150?text=Profile+Image", width=150)
+    
     st.title("Ahmer ALI")
     st.markdown("""
     **Python Developer | Data Enthusiast**  
@@ -53,11 +80,13 @@ with st.sidebar:
     
     st.markdown("---")
     
+    # Navigation
     st.subheader("Navigation")
-    page = st.radio("", ["Home / About Me", "Projects"], label_visibility="collapsed")
+    page = st.radio("", ["Home / About Me", "Projects", "Resume"], label_visibility="collapsed")
     
     st.markdown("---")
     
+    # Contact Info
     st.subheader("Let's Connect")
     st.markdown("""
     <div class="contact-info">
@@ -76,58 +105,74 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
+# ---------------------------
+# PAGE CONTENT
+# ---------------------------
 def home_page():
     with st.container():
+        st.markdown('<div class="main-container">', unsafe_allow_html=True)
         
-        st.title("Hello, I'm Ahmer ALI 👋", anchor=False)
-        st.markdown("""
-        <div class="intro-text">
-        I'm a passionate Python developer with expertise in building data-driven applications 
-        and creative solutions. I love turning ideas into functional, user-friendly applications.
-        </div>
-        """, unsafe_allow_html=True)
+        col1, col2 = st.columns([1, 2], gap="large")
         
-        st.markdown("---")
-        
-        with st.expander("📚 Education & Experience", expanded=True):
+        with col1:
+            try:
+                img_path = load_asset("profile_img_.jpg")
+                st.image(img_path, width=250)
+            except Exception as e:
+                st.error(f"Couldn't load profile image: {str(e)}")
+                st.image("https://via.placeholder.com/250?text=Profile+Image", width=250)
+            
+        with col2:
+            st.title("Hello, I'm Ahmer ALI 👋", anchor=False)
             st.markdown("""
-            <div class="experience-item">
-                <span class="exp-icon">🎓</span>
-                <div class="exp-content">
-                    <strong>BSc in Computer Science</strong>
-                </div>
-            </div>
-            <div class="experience-item">
-                <span class="exp-icon">💼</span>
-                <div class="exp-content">
-                    <strong>Python Developer Intern</strong> at Gexton Education
-                </div>
+            <div class="intro-text">
+            I'm a passionate Python developer with expertise in building data-driven applications 
+            and creative solutions. I love turning ideas into functional, user-friendly applications.
             </div>
             """, unsafe_allow_html=True)
-        
-        with st.expander("🛠️ Technical Skills", expanded=True):
-            cols = st.columns(3)
-            with cols[0]:
-                st.markdown("**Programming**")
-                st.markdown("- Python")
-                st.markdown("- Dart")
-                
-            with cols[1]:
-                st.markdown("**Frameworks**")
-                st.markdown("- Streamlit")
-                st.markdown("- Flutter")
-                st.markdown("- Pandas")
-                
-            with cols[2]:
-                st.markdown("**Tools**")
-                st.markdown("- Firebase")
-                st.markdown("- Git")
-                st.markdown("- VS Code")
+            
+            st.markdown("---")
+            
+            with st.expander("📚 Education & Experience", expanded=True):
+                st.markdown("""
+                <div class="experience-item">
+                    <span class="exp-icon">🎓</span>
+                    <div class="exp-content">
+                        <strong>BSc in Computer Science</strong>
+                    </div>
+                </div>
+                <div class="experience-item">
+                    <span class="exp-icon">💼</span>
+                    <div class="exp-content">
+                        <strong>Python Developer Intern</strong> at Gexton Education
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+            
+            with st.expander("🛠️ Technical Skills", expanded=True):
+                cols = st.columns(3)
+                with cols[0]:
+                    st.markdown("**Programming**")
+                    st.markdown("- Python")
+                    st.markdown("- Dart")
+                    
+                with cols[1]:
+                    st.markdown("**Frameworks**")
+                    st.markdown("- Streamlit")
+                    st.markdown("- Flutter")
+                    st.markdown("- Pandas")
+                    
+                with cols[2]:
+                    st.markdown("**Tools**")
+                    st.markdown("- Firebase")
+                    st.markdown("- Git")
+                    st.markdown("- VS Code")
         
         st.markdown('</div>', unsafe_allow_html=True)
 
 def projects_page():
     with st.container():
+        st.markdown('<div class="main-container">', unsafe_allow_html=True)
         
         st.title("🚀 My Projects", anchor=False)
         st.markdown("Here are some of my recent projects showcasing my skills and creativity.")
@@ -234,7 +279,201 @@ def projects_page():
         
         st.markdown('</div>', unsafe_allow_html=True)
 
+# def resume_page():
+#     with st.container():
+#         st.title("📄 My Resume", anchor=False)
+        
+#         col1, col2 = st.columns([3, 1], gap="large")
+        
+#         with col1:
+#             try:
+#                 # Get PDF path from GitHub URL
+#                 pdf_url = load_pdf("cv.pdf")
+                
+#                 # For GitHub URLs, we need to use a different approach
+#                 if pdf_url.startswith("http"):
+#                     # Download the PDF from GitHub
+#                     response = requests.get(pdf_url)
+#                     pdf_bytes = BytesIO(response.content)
+                    
+#                     # Display PDF
+#                     base64_pdf = base64.b64encode(pdf_bytes.read()).decode('utf-8')
+#                     pdf_display = f"""
+#                     <div class="resume-viewer-container">
+#                         <iframe src="data:application/pdf;base64,{base64_pdf}" width="100%" height="800px" type="application/pdf"></iframe>
+#                     </div>
+#                     """
+#                     st.markdown(pdf_display, unsafe_allow_html=True)
+                    
+#                     # Reset pointer for download
+#                     pdf_bytes.seek(0)
+#                     resume_data = pdf_bytes.read()
+#                 else:
+#                     # Local file
+#                     with open(pdf_url, "rb") as f:
+#                         resume_data = f.read()
+#                         base64_pdf = base64.b64encode(resume_data).decode('utf-8')
+#                         pdf_display = f"""
+#                         <div class="resume-viewer-container">
+#                             <iframe src="data:application/pdf;base64,{base64_pdf}" width="100%" height="800px" type="application/pdf"></iframe>
+#                         </div>
+#                         """
+#                         st.markdown(pdf_display, unsafe_allow_html=True)
+                        
+#             except Exception as e:
+#                 st.error(f"Couldn't load resume: {str(e)}")
+#                 st.markdown("""
+#                 <div style="background: #ffebee; padding: 20px; border-radius: 10px;">
+#                     <h3>Resume Preview Unavailable</h3>
+#                     <p>Please download the resume using the button on the right.</p>
+#                 </div>
+#                 """, unsafe_allow_html=True)
+#                 resume_data = None
+
+#         with col2:
+#             st.markdown("""
+#             <div class="resume-highlights">
+#                 <h3>Key Highlights</h3>
+#                 <div class="highlight-card">
+#                     <div class="highlight-icon">🎓</div>
+#                     <div class="highlight-content">
+#                         <div class="highlight-title">BSc in Computer Science</div>
+#                     </div>
+#                 </div>
+#                 <div class="highlight-card">
+#                     <div class="highlight-icon">💻</div>
+#                     <div class="highlight-content">
+#                         <div class="highlight-title">12+ Projects Completed</div>
+#                     </div>
+#                 </div>
+#                 <div class="highlight-card">
+#                     <div class="highlight-icon">📊</div>
+#                     <div class="highlight-content">
+#                         <div class="highlight-title">Data Analysis Skills</div>
+#                     </div>
+#                 </div>
+#                 <div class="highlight-card">
+#                     <div class="highlight-icon">🤖</div>
+#                     <div class="highlight-content">
+#                         <div class="highlight-title">AI/ML Experience</div>
+#                     </div>
+#                 </div>
+                
+#                 <h3 class="skills-title">Technical Skills</h3>
+#                 <div class="skill-card">
+#                     <div class="skill-info">
+#                         <span>Python</span>
+#                         <span>90%</span>
+#                     </div>
+#                     <div class="skill-bar-container">
+#                         <div class="skill-bar" style="width: 90%"></div>
+#                     </div>
+#                 </div>
+#                 <div class="skill-card">
+#                     <div class="skill-info">
+#                         <span>Streamlit</span>
+#                         <span>85%</span>
+#                     </div>
+#                     <div class="skill-bar-container">
+#                         <div class="skill-bar" style="width: 85%"></div>
+#                     </div>
+#                 </div>
+#                 <div class="skill-card">
+#                     <div class="skill-info">
+#                         <span>Pandas</span>
+#                         <span>80%</span>
+#                     </div>
+#                     <div class="skill-bar-container">
+#                         <div class="skill-bar" style="width: 80%"></div>
+#                     </div>
+#                 </div>
+#                 <div class="skill-card">
+#                     <div class="skill-info">
+#                         <span>Flutter</span>
+#                         <span>70%</span>
+#                     </div>
+#                     <div class="skill-bar-container">
+#                         <div class="skill-bar" style="width: 70%"></div>
+#                     </div>
+#                 </div>
+#             </div>
+#             """, unsafe_allow_html=True)
+            
+#             # Download button
+#             if resume_data:
+#                 st.download_button(
+#                     "⬇️ Download Resume", 
+#                     resume_data, 
+#                     file_name="Ahmer_ALI_Resume.pdf",
+#                     mime="application/pdf",
+#                     use_container_width=True,
+#                     key="resume-download"
+#                 )
+#             else:
+#                 st.markdown("""
+#                 <div style="text-align: center; margin-top: 20px;">
+#                     <a href="https://raw.githubusercontent.com/Ahmer109/portfolio_web/main/assets/cv.pdf" 
+#                        class="github-button" 
+#                        download="Ahmer_ALI_Resume.pdf">
+#                        Download Resume
+#                     </a>
+#                 </div>
+#                 """, unsafe_allow_html=True)
+
+# ---------------------------
+# PAGE ROUTING
+# ---------------------------
 if page == "Home / About Me":
     home_page()
 elif page == "Projects":
     projects_page()
+# elif page == "Resume":
+#     resume_page()
+
+# ---------------------------
+# CUSTOM CSS (Embedded as fallback)
+# ---------------------------
+st.markdown("""
+<style>
+:root {
+    --primary-color: #4b6cb7;
+    --secondary-color: #3a56a0;
+    --dark-bg: #0f0c29;
+    --darker-bg: #0a081f;
+    --card-bg: rgba(26, 26, 46, 0.8);
+    --text-color: #ffffff;
+    --text-secondary: #d1d1d1;
+    --accent-color: #6a5acd;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+}
+
+.stApp {
+    background: linear-gradient(135deg, var(--dark-bg) 0%, #302b63 50%, #24243e 100%) !important;
+    background-attachment: fixed !important;
+}
+
+.main-container {
+    background: var(--card-bg) !important;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 2rem;
+}
+
+[data-testid="stSidebar"] {
+    background: linear-gradient(180deg, var(--darker-bg) 0%, #16213e 100%) !important;
+    color: white;
+    padding: 1.5rem !important;
+}
+
+/* ... (rest of your CSS) ... */
+</style>
+""", unsafe_allow_html=True)
